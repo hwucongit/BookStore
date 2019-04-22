@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <ImageView
+        android:scaleType="centerCrop"
+        android:layout_width="130dp"
+        android:layout_height="160dp"
+        android:id="@+id/imv_thumbnail"
+        android:src="@drawable/logo_book_default"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:maxLines="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tên sách"
+        android:id="@+id/tv_book_name"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="69.096 VNĐ"
+        android:textColor="@color/red"
+        android:id="@+id/tv_book_price"/>
+
+</LinearLayout>

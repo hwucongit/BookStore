@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Book Store</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="login">Đăng nhập</string>
+    <string name="forgot_your_password">Quên mật khẩu ?</string>
+    <string name="create_a_new_account">Tạo tài khoản mới</string>
+    <string name="username">username</string>
+    <string name="password">mật khẩu</string>
+    <string name="email">email</string>
+    <string name="repeat_password">nhập lại mật khẩu</string>
+    <string name="phone_number">số điện thoại</string>
+    <string name="full_name">Họ và tên</string>
+    <string name="please_wait">Vui lòng chờ ...</string>
+    <string name="infor_wrong">Tài khoản hoặc mật khẩu không chính xác</string>
+    <string name="fail_tryagain">Lỗi ! Vui lòng thử lại sau</string>
+    <string name="type_both_username_pass">Nhập cả username và mật khẩu</string>
+    <string name="guest_loggin">Khách | Đăng nhập</string>
+    <string name="fill_full_infor">Điền đầy đủ thông tin</string>
+    <string name="username_no_space">username không được có khoảng trắng</string>
+    <string name="pass_must_same">2 mật khẩu phải giống nhau</string>
+    <string name="vietnam">Việt Nam</string>
+    <string name="customer">Customer</string>
+    <string name="register">Đăng ký</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="your_username">Nhập username</string>
+    <string name="search_hint">Tìm sách, tác giả, nhà xuất bản</string>
+    <string name="quote_fun"><![CDATA[Hôm nay đọc sách & Ngày mai làm chủ tịch !]]></string>
+    <string name="my_account">Tài khoản</string>
+    <string name="no_result_match">Không tìm thấy kết quả phù hợp!</string>
+    <string name="quantity">Số lượng</string>
+    <string name="description">Mô tả</string>
+    <string name="no_description">Không có mô tả.</string>
+    <string name="wishlist">Yêu thích</string>
+</resources>
