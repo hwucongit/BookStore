@@ -1,6 +1,7 @@
 package com.teamand.bookstore.manager;
 
 import com.teamand.bookstore.api.BookStoreService;
+import com.teamand.bookstore.api.ConvertMoneyService;
 import com.teamand.bookstore.helper.Constants;
 import com.teamand.bookstore.model.Account;
 import com.teamand.bookstore.model.User;
@@ -15,8 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class RetrofitManager {
-    private Retrofit retrofit;
-    public static BookStoreService bookStoreService;
+    private static RetrofitManager retrofitManager;
+    private static BookStoreService bookStoreService;
+    private static ConvertMoneyService convertMoneyService;
+    private static Retrofit retrofit;
     public void initRetrofit(String apiURL){
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(1, TimeUnit.MINUTES)
@@ -29,9 +32,11 @@ public class RetrofitManager {
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
-
-    public Retrofit getRetrofit() {
-        return retrofit;
+    public static synchronized RetrofitManager getInstance(){
+        if(retrofitManager == null){
+            retrofitManager = new RetrofitManager();
+        }
+        return retrofitManager;
     }
     public BookStoreService getBookStoreService(){
         if(bookStoreService == null) {
@@ -40,4 +45,15 @@ public class RetrofitManager {
         }
         return bookStoreService;
     }
+    public ConvertMoneyService getConvertMoneyService(){
+        if (convertMoneyService == null){
+            retrofit = new Retrofit.Builder()
+                    .baseUrl("http://apilayer.net/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            convertMoneyService = retrofit.create(ConvertMoneyService.class);
+        }
+        return convertMoneyService;
+    }
+
 }

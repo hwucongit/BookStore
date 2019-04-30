@@ -41,6 +41,8 @@ public class BookInfo {
 	@SerializedName("availableQuantity")
 	@Expose
 	private int availableQuantity;
+
+	private int quantity;
 	
 	public int getAvailableQuantity() {
 		return availableQuantity;
@@ -121,6 +123,13 @@ public class BookInfo {
 	}
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
-	}			
-	
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 }

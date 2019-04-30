@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:background="@color/white"
+    android:layout_marginTop="4dp">
+    <ImageView
+        android:id="@+id/imv_thumbnail"
+        android:layout_width="140dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="150dp"
+        android:src="@drawable/logo_book_default"/>
+    <TextView
+        android:id="@+id/tv_book_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="150dp"
+        android:text="Tên sách"
+        android:maxLines="2"
+        android:layout_toRightOf="@id/imv_thumbnail"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+    <TextView
+        android:layout_below="@+id/tv_book_name"
+        android:layout_alignLeft="@id/tv_book_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 VNĐ"
+        android:textSize="20sp"
+        android:textColor="#F44336"
+        android:id="@+id/tv_book_price"/>
+    <TextView
+        android:layout_below="@+id/tv_book_price"
+        android:layout_alignLeft="@id/tv_book_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 VNĐ"
+        android:background="@drawable/strike_price"
+        android:textColor="#000000"
+        android:id="@+id/tv_book_price_origin"/>
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/imb_delete"
+        android:layout_width="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_book_name"
+        android:layout_marginRight="10dp"
+        android:src="?selectableItemBackground"
+        android:background="@drawable/ic_delete_grey_500_48dp"
+        android:layout_height="40dp" />
+    <LinearLayout
+        android:layout_alignLeft="@id/tv_book_name"
+        android:layout_width="wrap_content"
+        android:layout_alignBottom="@id/imv_thumbnail"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_sub_quantity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="-"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_button_normal_login" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_quantity"
+            android:text="1"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/btn_add_quantity"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:text="+"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_button_normal_login" />
+    </LinearLayout>
+</RelativeLayout>

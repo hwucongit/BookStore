@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.paypal.android.sdk.payments.ShippingAddress;
 import com.teamand.bookstore.R;
 import com.teamand.bookstore.manager.SessionManager;
 
@@ -34,6 +35,9 @@ public class ProfileUserActivity extends AppCompatActivity implements View.OnCli
         btnLogout = findViewById(R.id.btn_logout);
         imbClose.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
+        findViewById(R.id.btn_order).setOnClickListener(this);
+        findViewById(R.id.btn_shipping_address).setOnClickListener(this);
+        findViewById(R.id.btn_change_profile).setOnClickListener(this);
 
         sessionManager = new SessionManager(getApplicationContext());
         tvUsername.setText(sessionManager.getCurrentUser().getName());
@@ -48,6 +52,15 @@ public class ProfileUserActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.btn_logout:
                 logoutUser();
+                break;
+            case R.id.btn_shipping_address:
+                startActivity(new Intent(this, ShippingAddressActivity.class));
+                break;
+            case R.id.btn_order:
+                startActivity(new Intent(this,OrdersActivity.class));
+                break;
+            case R.id.btn_change_profile:
+                startActivity(new Intent(this, SettingAccountActivity.class));
                 break;
             default:
                 break;

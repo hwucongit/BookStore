@@ -14,6 +14,19 @@
         android:id="@+id/imv_thumbnail"
         android:src="@drawable/logo_book_default"/>
     <TextView
+        android:id="@+id/tv_discount"
+        android:layout_alignTop="@+id/imv_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/bg_discount_green"
+        android:padding="4dp"
+        android:text="0 %"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="15sp"/>
+    <TextView
         android:layout_alignTop="@+id/imv_thumbnail"
         android:layout_toRightOf="@id/imv_thumbnail"
         android:layout_marginTop="10dp"

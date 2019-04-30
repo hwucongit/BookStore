@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
-        BookStoreService bookStoreService = retrofitManager.getRetrofit().create(BookStoreService.class);
+        BookStoreService bookStoreService = retrofitManager.getBookStoreService();
         bookStoreService.doLogin(account).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

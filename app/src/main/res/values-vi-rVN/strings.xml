@@ -36,4 +36,16 @@
     <string name="description">Mô tả</string>
     <string name="no_description">Không có mô tả.</string>
     <string name="wishlist">Yêu thích</string>
+    <string name="account_exist">Tài khoản này đã tồn tại !</string>
+    <string name="book_category">THỂ LOẠI SÁCH</string>
+    <string name="personal">CÁ NHÂN</string>
+    <string name="book_publisher">NHÀ XUẤT BẢN</string>
+    <string name="cart">Giỏ hàng</string>
+    <string name="wish_list">Yêu thích</string>
+    <string name="total_price">Tổng giá</string>
+    <string name="shipping_address">Địa chỉ giao hàng</string>
+    <string name="check_out">Thanh toán</string>
+    <string name="orders">Đơn hàng</string>
+    <string name="account_detail">Cài đặt tài khoản</string>
+    <string name="log_out">Đăng xuất</string>
 </resources>

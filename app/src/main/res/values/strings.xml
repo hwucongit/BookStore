@@ -35,4 +35,19 @@
     <string name="description">Description</string>
     <string name="no_description">No description.</string>
     <string name="wishlist">Wishlist</string>
+    <string name="account_exist">Account is exist !</string>
+    <string name="book_category">Book Category</string>
+    <string name="personal">Personal</string>
+    <string name="book_publisher">Book Publisher</string>
+    <string name="cart">Cart</string>
+    <string name="wish_list">Wishlist</string>
+    <string name="total_price">Total</string>
+    <string name="check_out">Checkout</string>
+    <string name="orders">Orders</string>
+    <string name="shipping_address">Shipping address</string>
+    <string name="account_detail">Account Detail</string>
+    <string name="log_out">Log out</string>
+    <string name="time">Time:</string>
+    <string name="payment">Payment:</string>
+    <string name="status">Status:</string>
 </resources>

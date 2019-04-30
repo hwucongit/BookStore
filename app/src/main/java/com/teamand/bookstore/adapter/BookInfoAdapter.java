@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.teamand.bookstore.R;
 import com.teamand.bookstore.helper.Constants;
 import com.teamand.bookstore.model.Book;
@@ -45,6 +46,17 @@ public class BookInfoAdapter extends RecyclerView.Adapter<BookInfoAdapter.Holder
         final BookInfo book = books.get(i);
         holder.tvBookName.setText(book.getName());
         holder.tvBookPrice.setText(book.getPrice() + " VNĐ");
+        if(book.getDiscount() > 0){
+            holder.tvDiscount.setVisibility(View.VISIBLE);
+            holder.tvDiscount.setText(book.getDiscount() + " %");
+        }
+        if (book.getImgUrl()!= null){
+            String url = Constants.urlImage + book.getImgUrl();
+            Picasso.with(context)
+                    .load(url)
+                    .placeholder(R.drawable.logo_book_default)
+                    .into(holder.imvThumbnail);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,12 +77,13 @@ public class BookInfoAdapter extends RecyclerView.Adapter<BookInfoAdapter.Holder
 
     public class Holder extends RecyclerView.ViewHolder {
         private ImageView imvThumbnail;
-        private TextView tvBookName, tvBookPrice;
+        private TextView tvBookName, tvBookPrice, tvDiscount, tvOriginPrice;
         public Holder(@NonNull View itemView) {
             super(itemView);
             imvThumbnail = itemView.findViewById(R.id.imv_thumbnail);
             tvBookName = itemView.findViewById(R.id.tv_book_name);
             tvBookPrice = itemView.findViewById(R.id.tv_book_price);
+            tvDiscount = itemView.findViewById(R.id.tv_discount);
         }
     }
 }

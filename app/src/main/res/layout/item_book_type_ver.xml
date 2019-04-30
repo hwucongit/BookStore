@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <ImageView
+        android:padding="10dp"
         android:scaleType="centerCrop"
         android:layout_width="130dp"
         android:layout_height="160dp"
         android:id="@+id/imv_thumbnail"
         android:src="@drawable/logo_book_default"/>
     <TextView
+        android:id="@+id/tv_discount"
+        android:layout_alignTop="@+id/imv_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_discount_green"
+        android:padding="4dp"
+        android:text="0 %"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+    <TextView
+        android:layout_below="@+id/imv_thumbnail"
         android:layout_marginLeft="10dp"
         android:maxLines="1"
-        android:layout_width="match_parent"
+        android:maxWidth="130dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tên sách"
         android:id="@+id/tv_book_name"/>
     <TextView
+        android:layout_below="@+id/tv_book_name"
         android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,4 +40,4 @@
         android:textColor="@color/red"
         android:id="@+id/tv_book_price"/>
 
-</LinearLayout>
+</RelativeLayout>

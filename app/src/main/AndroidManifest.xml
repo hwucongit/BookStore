@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.teamand.bookstore">
     <uses-permission android:name="android.permission.INTERNET"/>
-
     <application
         android:vmSafeMode="true"
         android:allowBackup="true"
@@ -29,6 +29,11 @@
         <activity android:name=".ui.activity.ListBookActivity"/>
         <activity android:name=".ui.activity.BookDetailActivity"/>
         <activity android:name=".ui.activity.WishListActivity"/>
+        <activity android:name=".ui.activity.CartActivity"/>
+        <activity android:name=".ui.activity.CheckoutActivity"/>
+        <activity android:name=".ui.activity.ShippingAddressActivity"/>
+        <activity android:name=".ui.activity.SettingAccountActivity"/>
+        <activity android:name=".ui.activity.OrdersActivity"/>
     </application>
 
 </manifest>

@@ -2,41 +2,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
+    <group android:id="@+id/home">
     <item
+        android:orderInCategory="1"
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home_teal_500_48dp"
         android:title="Home">
-
     </item>
+    </group>
 
-    <item android:title="Book Category">
-        <menu>
-            <item
-                android:id="@+id/nav_category_literary"
-                android:icon="@drawable/ic_book_teal_500_48dp"
-                android:title="Literary Books" />
-            <item
-                android:id="@+id/nav_category_comic"
-                android:icon="@drawable/ic_book_teal_500_48dp"
-                android:title="Comic Books" />
-        </menu>
+    <group android:id="@+id/category">
+    <item android:title="@string/book_category"
+        android:orderInCategory="2">
+            <menu/>
     </item>
+    </group>
 
-    <item android:title="Book Publisher">
-        <menu>
-            <item
-                android:id="@+id/nav_publisher_kimdong"
-                android:icon="@drawable/ic_book_teal_500_48dp"
-                android:title="NXB Kim Đồng" />
-            <item
-                android:id="@+id/nav_publisher_giaoduc"
-                android:icon="@drawable/ic_book_teal_500_48dp"
-                android:title="NXB Giáo Dục" />
-        </menu>
+    <group android:id="@+id/publisher">
+    <item android:title="@string/book_publisher"
+        android:orderInCategory="3">
+        <menu></menu>
     </item>
+    </group>
 
-    <item android:title="Personal">
+    <group android:id="@+id/personal">
+    <item android:title="@string/personal"
+        android:orderInCategory="4">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -44,5 +35,6 @@
                 android:title="Share" />
         </menu>
     </item>
+    </group>
 
 </menu>

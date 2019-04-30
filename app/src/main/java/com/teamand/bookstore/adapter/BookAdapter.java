@@ -24,10 +24,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.Holder> {
         this.books = books;
         this.type = type;
     }
+
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         this.context = viewGroup.getContext();
+
         View view = null;
         if (type == Constants.ITEM_BOOK_TYPE_VER) {
             view = LayoutInflater.from(context).inflate(R.layout.item_book_type_ver, viewGroup, false);

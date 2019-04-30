@@ -100,12 +100,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    User user = response.body();
                     sessionManager.createLoginSession(user.getId(), user.getName(), user.getEmail());
                     dialog.dismiss();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                }else {
+                }else if(response.code() == 409){
+                    Helper.showToast(getApplicationContext(),getString(R.string.account_exist));
                     dialog.dismiss();
                 }
             }

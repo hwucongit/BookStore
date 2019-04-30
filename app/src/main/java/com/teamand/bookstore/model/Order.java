@@ -2,7 +2,7 @@ package com.teamand.bookstore.model;
 
 import java.sql.Date;
 
-public class Order {
+public class Order{
 	private int id;
 	private Client client;
 	private Cart cart;
@@ -10,7 +10,7 @@ public class Order {
 	private String status;
 	private ShippingInfo shippingInfo;
 	private String paymentMethod;
-	
+
 	public String getPaymentMethod() {
 		return paymentMethod;
 	}
@@ -53,8 +53,8 @@ public class Order {
 	public void setDateCreate(Date dateCreate) {
 		this.dateCreate = dateCreate;
 	}
-	
-	
-	
-	
+
+
+
+
 }
