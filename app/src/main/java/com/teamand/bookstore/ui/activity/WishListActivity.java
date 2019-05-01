@@ -1,5 +1,6 @@
 package com.teamand.bookstore.ui.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.teamand.bookstore.R;
@@ -19,6 +21,7 @@ import com.teamand.bookstore.manager.RetrofitManager;
 import com.teamand.bookstore.manager.SessionManager;
 import com.teamand.bookstore.manager.WishListManager;
 import com.teamand.bookstore.model.BookInfo;
+import com.teamand.bookstore.model.WishList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WishListActivity extends AppCompatActivity {
+public class WishListActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView rvListBook;
     private List<BookInfo> bookInfoList;
     private Toolbar toolbar;
@@ -61,6 +64,8 @@ public class WishListActivity extends AppCompatActivity {
         tvTotalItem = findViewById(R.id.tv_quantity_book);
         tvTotalItem.setText(CartManager.getInstance(this).getTotalItem()+"");
         listBookId = wishListManager.getWishList();
+        findViewById(R.id.imb_cart).setOnClickListener(this);
+        findViewById(R.id.imb_search).setOnClickListener(this);
     }
 
     private void loadWishList() {
@@ -138,4 +143,19 @@ public class WishListActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imb_search:
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
+            case R.id.imb_cart:
+                startActivity(new Intent(getApplicationContext(), CartActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
+            default:
+                break;
+        }
+    }
 }

@@ -23,6 +23,7 @@ import com.teamand.bookstore.manager.RetrofitManager;
 import com.teamand.bookstore.manager.SessionManager;
 import com.teamand.bookstore.manager.WishListManager;
 import com.teamand.bookstore.model.BookInfo;
+import com.teamand.bookstore.model.WishList;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             tvDiscount, tvDescription, tvQuantity, tvToExpand, tvExpand, tvTotalItem, tvOriginPrice;
     private boolean isExpended;
     private Button btnAddQuantity, btnSubQuantity, btnAddToCart, btnBuyNow;
-    private ImageButton imbFavorite;
+    private ImageButton imbFavorite, imbWishList, imbCart, imbSearch;
     private ImageView ivThumbnail;
     private BookInfo bookInfo;
     private int idBook;
@@ -71,6 +72,9 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         btnBuyNow = findViewById(R.id.btn_buy_now);
         ivThumbnail = findViewById(R.id.imv_thumbnail);
         tvOriginPrice = findViewById(R.id.tv_book_price_origin);
+        toolbar.findViewById(R.id.imb_wish_lish).setOnClickListener(this);
+        toolbar.findViewById(R.id.imb_search).setOnClickListener(this);
+        toolbar.findViewById(R.id.imb_cart).setOnClickListener(this);
         findViewById(R.id.btn_add_quantity).setOnClickListener(this);
         findViewById(R.id.btn_sub_quantity).setOnClickListener(this);
         findViewById(R.id.imb_favorite).setOnClickListener(this);
@@ -82,10 +86,11 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-    private void loadTotalItem(){
+    private void loadTotalItem() {
         int total = cartManager.getTotalItem();
         tvTotalItem.setText(total + "");
     }
+
     private void loadPropertyBook() {
         idBook = getIntent().getIntExtra("bookId", 0);
         BookStoreService bookStoreService = new RetrofitManager().getBookStoreService();
@@ -94,12 +99,12 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             public void onResponse(Call<BookInfo> call, Response<BookInfo> response) {
                 if (response.isSuccessful()) {
                     bookInfo = response.body();
-                    tvAvailabeQuantity.setText(bookInfo.getAvailableQuantity()+"");
+                    tvAvailabeQuantity.setText(bookInfo.getAvailableQuantity() + "");
                     if (bookInfo.getDiscount() > 0) {
                         tvDiscount.setVisibility(View.VISIBLE);
                         tvDiscount.setText(bookInfo.getDiscount() + " %");
                         tvOriginPrice.setText(bookInfo.getPrice() + " VNĐ");
-                        tvBookPrice.setText(bookInfo.getPrice() - bookInfo.getPrice()*bookInfo.getDiscount()/100 +" VNĐ");
+                        tvBookPrice.setText(bookInfo.getPrice() - bookInfo.getPrice() * bookInfo.getDiscount() / 100 + " VNĐ");
                     } else {
                         tvBookPrice.setText(bookInfo.getPrice() + " VNĐ");
                         tvOriginPrice.setVisibility(View.GONE);
@@ -107,7 +112,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
                     if (bookInfo.getDescription() != null)
                         tvDescription.setText(bookInfo.getDescription());
                     tvBookName.setText(bookInfo.getName());
-                    if(bookInfo.getImgUrl() != null){
+                    if (bookInfo.getImgUrl() != null) {
                         String url = Constants.urlImage + bookInfo.getImgUrl();
                         Picasso.with(getApplicationContext())
                                 .load(url)
@@ -163,13 +168,25 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.btn_buy_now:
                 buyNow();
                 break;
+            case R.id.imb_wish_lish:
+                startActivity(new Intent(getApplicationContext(), WishList.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
+            case R.id.imb_cart:
+                startActivity(new Intent(getApplicationContext(), CartActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
+            case R.id.imb_search:
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
             default:
                 break;
         }
     }
 
     private void buyNow() {
-        if(Integer.valueOf(tvQuantity.getText().toString()) <=
+        if (Integer.valueOf(tvQuantity.getText().toString()) <=
                 Integer.valueOf(tvAvailabeQuantity.getText().toString())) {
             btnBuyNow.setVisibility(View.GONE);
             findViewById(R.id.pgb_buy_now).setVisibility(View.VISIBLE);
@@ -183,70 +200,71 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
                 Helper.showToast(getApplicationContext(), "Đã tồn tại sách trong giỏ hàng");
             }
             tvTotalItem.setText(cartManager.getTotalItem() + "");
-        }else
-            Helper.showToast(getApplicationContext(),"Không đủ sách trong kho!");
+        } else
+            Helper.showToast(getApplicationContext(), "Không đủ sách trong kho!");
     }
 
 
-    private void addToCart(){
-        if(Integer.valueOf(tvQuantity.getText().toString()) <=
+    private void addToCart() {
+        if (Integer.valueOf(tvQuantity.getText().toString()) <=
                 Integer.valueOf(tvAvailabeQuantity.getText().toString())) {
             btnAddToCart.setVisibility(View.GONE);
             findViewById(R.id.pgb_add_to_cart).setVisibility(View.VISIBLE);
-            boolean resultAdd = cartManager.addToCart(bookInfo,Integer.valueOf(tvQuantity.getText().toString()));
+            boolean resultAdd = cartManager.addToCart(bookInfo, Integer.valueOf(tvQuantity.getText().toString()));
             findViewById(R.id.pgb_add_to_cart).setVisibility(View.GONE);
             btnAddToCart.setVisibility(View.VISIBLE);
-            if(resultAdd == true){
-                Helper.showToast(getApplicationContext(),"Đã thêm vào giỏ hàng");
-            }else {
-                Helper.showToast(getApplicationContext(),"Đã tồn tại sách trong giỏ hàng");
-            }
-            tvTotalItem.setText(cartManager.getTotalItem()+"");
-        }else
-            Helper.showToast(getApplicationContext(),"Không đủ sách trong kho!");
-    }
-    private void handleButtonFavorite() {
-            WishListManager manager = new WishListManager(this);
-            BookStoreService bookStoreService = new RetrofitManager().getBookStoreService();
-            if (!manager.isLikedBook(idBook)) {
-                manager.addToWishList(idBook);
-                imbFavorite.setBackgroundResource(R.drawable.ic_favorite_red_700_48dp);
-                if(session.isLoggedIn()) {
-                    bookStoreService.addToWishlist(session.getCurrentUser().getId(),idBook).enqueue(
-                            new Callback<Boolean>() {
-                        @Override
-                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                            if(response.isSuccessful()){
-                                imbFavorite.setBackgroundResource(R.drawable.ic_favorite_red_700_48dp);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Boolean> call, Throwable t) {
-
-                        }
-                    });
-                }
+            if (resultAdd == true) {
+                Helper.showToast(getApplicationContext(), "Đã thêm vào giỏ hàng");
             } else {
-                manager.deleteFromWishList(idBook);
-                if(session.isLoggedIn()){
-                    bookStoreService.removeFromWishlist(session.getCurrentUser().getId(),idBook)
-                            .enqueue(new Callback<Boolean>() {
-                                @Override
-                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                                    if(response.isSuccessful()){
-                                        imbFavorite.setBackgroundResource(R.drawable.btn_favorite_unselected);
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<Boolean> call, Throwable t) {
-
-                                }
-                            });
-                }
-                imbFavorite.setBackgroundResource(R.drawable.btn_favorite_unselected);
+                Helper.showToast(getApplicationContext(), "Đã tồn tại sách trong giỏ hàng");
             }
+            tvTotalItem.setText(cartManager.getTotalItem() + "");
+        } else
+            Helper.showToast(getApplicationContext(), "Không đủ sách trong kho!");
+    }
+
+    private void handleButtonFavorite() {
+        WishListManager manager = new WishListManager(this);
+        BookStoreService bookStoreService = new RetrofitManager().getBookStoreService();
+        if (!manager.isLikedBook(idBook)) {
+            manager.addToWishList(idBook);
+            imbFavorite.setBackgroundResource(R.drawable.ic_favorite_red_700_48dp);
+            if (session.isLoggedIn()) {
+                bookStoreService.addToWishlist(session.getCurrentUser().getId(), idBook).enqueue(
+                        new Callback<Boolean>() {
+                            @Override
+                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                if (response.isSuccessful()) {
+                                    imbFavorite.setBackgroundResource(R.drawable.ic_favorite_red_700_48dp);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Boolean> call, Throwable t) {
+
+                            }
+                        });
+            }
+        } else {
+            manager.deleteFromWishList(idBook);
+            if (session.isLoggedIn()) {
+                bookStoreService.removeFromWishlist(session.getCurrentUser().getId(), idBook)
+                        .enqueue(new Callback<Boolean>() {
+                            @Override
+                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                if (response.isSuccessful()) {
+                                    imbFavorite.setBackgroundResource(R.drawable.btn_favorite_unselected);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Boolean> call, Throwable t) {
+
+                            }
+                        });
+            }
+            imbFavorite.setBackgroundResource(R.drawable.btn_favorite_unselected);
+        }
     }
 
     @Override

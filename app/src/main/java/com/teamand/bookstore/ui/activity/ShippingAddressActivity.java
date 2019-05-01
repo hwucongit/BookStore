@@ -62,7 +62,6 @@ public class ShippingAddressActivity extends AppCompatActivity implements View.O
                                 edtCity.setText(user.getAddress().getCity());
                                 currentUser = user;
                             }
-                            response.raw().close();
                         }
 
 

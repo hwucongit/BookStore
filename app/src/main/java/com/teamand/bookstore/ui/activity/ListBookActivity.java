@@ -1,5 +1,6 @@
 package com.teamand.bookstore.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import com.teamand.bookstore.helper.Helper;
 import com.teamand.bookstore.manager.CartManager;
 import com.teamand.bookstore.manager.RetrofitManager;
 import com.teamand.bookstore.model.BookInfo;
+import com.teamand.bookstore.model.Cart;
+import com.teamand.bookstore.model.WishList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +27,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListBookActivity extends AppCompatActivity {
+public class ListBookActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private List<BookInfo> bookInfoList;
-    private RetrofitManager retrofitManager;
     private RecyclerView rvListBook;
     private TextView tvNotice, tvTotalItem;
 
@@ -50,7 +52,9 @@ public class ListBookActivity extends AppCompatActivity {
         rvListBook.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
                 LinearLayoutManager.VERTICAL, false));
         tvTotalItem = findViewById(R.id.tv_quantity_book);
-        tvTotalItem.setText(CartManager.getInstance(getApplicationContext()).getTotalItem()+"");
+        tvTotalItem.setText(CartManager.getInstance(getApplicationContext()).getTotalItem() + "");
+        findViewById(R.id.imb_wish_lish).setOnClickListener(this);
+        findViewById(R.id.imb_cart).setOnClickListener(this);
         loadBook();
     }
 
@@ -66,28 +70,28 @@ public class ListBookActivity extends AppCompatActivity {
 
     }
 
-    private void loadBookByBookName(){
+    private void loadBookByBookName() {
         String key = getIntent().getStringExtra("keySearch");
         RetrofitManager.getInstance().getBookStoreService().getBookByName(key)
                 .enqueue(new Callback<List<BookInfo>>() {
-            @Override
-            public void onResponse(Call<List<BookInfo>> call, Response<List<BookInfo>> response) {
-                if (response.isSuccessful()) {
-                    bookInfoList = response.body();
-                    if (bookInfoList.size() == 0)
-                        tvNotice.setVisibility(View.VISIBLE);
-                    else {
-                        BookInfoAdapter adapter = new BookInfoAdapter(bookInfoList, Constants.ITEM_BOOK_TYPE_HOR);
-                        rvListBook.setAdapter(adapter);
+                    @Override
+                    public void onResponse(Call<List<BookInfo>> call, Response<List<BookInfo>> response) {
+                        if (response.isSuccessful()) {
+                            bookInfoList = response.body();
+                            if (bookInfoList.size() == 0)
+                                tvNotice.setVisibility(View.VISIBLE);
+                            else {
+                                BookInfoAdapter adapter = new BookInfoAdapter(bookInfoList, Constants.ITEM_BOOK_TYPE_HOR);
+                                rvListBook.setAdapter(adapter);
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<BookInfo>> call, Throwable t) {
-                Helper.showToast(getApplicationContext(), t.toString());
-            }
-        });
+                    @Override
+                    public void onFailure(Call<List<BookInfo>> call, Throwable t) {
+                        Helper.showToast(getApplicationContext(), t.toString());
+                    }
+                });
     }
 
     private void loadBookByCategory() {
@@ -145,6 +149,23 @@ public class ListBookActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        tvTotalItem.setText(CartManager.getInstance(this).getTotalItem()+"");
+        tvTotalItem.setText(CartManager.getInstance(this).getTotalItem() + "");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imb_wish_lish:
+                startActivity(new Intent(getApplicationContext(), WishList.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
+            case R.id.imb_cart:
+                startActivity(new Intent(getApplicationContext(), CartActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                break;
+            default:
+                break;
+        }
+
     }
 }

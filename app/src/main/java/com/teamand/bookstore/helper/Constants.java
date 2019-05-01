@@ -1,7 +1,7 @@
 package com.teamand.bookstore.helper;
 
 public class Constants {
-    public static final String apiBookStore = "http://192.168.43.253:8080/";
+    public static final String apiBookStore = "http://192.168.1.224:8080/";
     public static final String urlImage = apiBookStore + "bookstore/book/image?fileName=";
     public static final String PAYPAL_CLIENT_ID = "AQuOpYSDliZcbZU9KE4TzGJ3fDXkOOsihV8rWUelhtsZTxMIeivXO6AXq7Aigz9Nm0jbFr163W9D7-8v";
     public static final int ITEM_BOOK_TYPE_VER = 1;

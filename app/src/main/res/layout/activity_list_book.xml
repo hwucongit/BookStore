@@ -22,6 +22,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/imb_wish_lish"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:visibility="gone"
                 android:background="@drawable/ic_search_white_48dp" />
 
             <ImageButton
