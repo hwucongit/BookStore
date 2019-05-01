@@ -66,31 +66,36 @@ public class BookInCartAdapter extends RecyclerView.Adapter<BookInCartAdapter.Ho
                     .placeholder(R.drawable.logo_book_default)
                     .into(holder.imvThumbnail);
         }
-        holder.tvQuantity.setText(getQuantity(bookInfo.getId()) + "");
+        holder.tvQuantity.setText(bookInfo.getQuantity()+"");
 
+        //button delete
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cartManager.removeItem(bookInfo.getId());
+                cartManager.deleteFromCart(bookInfo);
                 bookInfoList.remove(index);
                 notifyDataSetChanged();
                 iBook.onChangeTotalPrice(getTotalPrice());
             }
         });
+        // button add quantity
+
         holder.btnAddQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.tvQuantity.setText(Integer.parseInt(holder.tvQuantity.getText().toString())+ 1 + "");
-                cartManager.updateQuantityItem(bookInfo.getId(),Integer.parseInt(holder.tvQuantity.getText().toString()));
+                cartManager.updateQuantity(bookInfo.getId(),Integer.parseInt(holder.tvQuantity.getText().toString()));
                 iBook.onChangeTotalPrice(getTotalPrice());
             }
         });
+
+        // button sub quantity
         holder.btnSubQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(Integer.parseInt(holder.tvQuantity.getText().toString()) > 1){
                     holder.tvQuantity.setText(Integer.parseInt(holder.tvQuantity.getText().toString()) - 1 + "");
-                    cartManager.updateQuantityItem(bookInfo.getId(),Integer.parseInt(holder.tvQuantity.getText().toString()));
+                    cartManager.updateQuantity(bookInfo.getId(),Integer.parseInt(holder.tvQuantity.getText().toString()));
                     iBook.onChangeTotalPrice(getTotalPrice());
                 }
             }
@@ -123,10 +128,6 @@ public class BookInCartAdapter extends RecyclerView.Adapter<BookInCartAdapter.Ho
         }
     }
 
-    private int getQuantity(int bookId) {
-        return hashMap.get(bookId);
-    }
-
     public HashMap<Integer, Integer> getHashMap() {
         return hashMap;
     }
@@ -138,14 +139,15 @@ public class BookInCartAdapter extends RecyclerView.Adapter<BookInCartAdapter.Ho
         void onChangeTotalPrice(int price);
     }
     public int getTotalPrice(){
+        bookInfoList = cartManager.getListBookInCart();
         int total = 0;
-        for (int i = 0; i < cartManager.getCartInfo().size(); i++) {
+        for (int i = 0; i < bookInfoList.size(); i++) {
             BookInfo bookInfo = bookInfoList.get(i);
             if(bookInfo.getDiscount() > 0){
                 total += (bookInfo.getPrice() - bookInfo.getPrice()*bookInfo.getDiscount()/100)
-                        * cartManager.getCartInfo().get(bookInfo.getId());
+                            * bookInfo.getQuantity();
             }else {
-                total += bookInfoList.get(i).getPrice() * cartManager.getCartInfo().get(bookInfoList.get(i).getId());
+                total += bookInfoList.get(i).getPrice() * bookInfo.getQuantity();
             }
         }
         return total;

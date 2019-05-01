@@ -24,18 +24,17 @@ public class CartManager {
     private SharedPreferences.Editor editor;
     private static String PREF_NAME = "cart";
     private static String KEY_DATA = "data";
-    private static String KEY_DATA_CART = "data_cart";
     private static String KEY_TOTAL_ITEM = "total_item";
-    private HashMap<Integer, Integer> hashMap;
     private List<BookInfo> bookInfoList;
-    private Gson gson = new Gson();
-    private Type type = new TypeToken<HashMap<Integer, Integer>>() {
-    }.getType();
+    private Gson gson;
+    private Type type;
 
     public CartManager(Context context) {
         this.context = context;
-        hashMap = new HashMap<>();
+        gson = new Gson();
         bookInfoList = new ArrayList<>();
+        type = new TypeToken<List<BookInfo>>() {
+        }.getType();
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
@@ -51,17 +50,27 @@ public class CartManager {
         return sharedPreferences.getInt(KEY_TOTAL_ITEM, 0);
     }
 
-    public boolean addToCart(int bookId, int quantity) {
-        if (!isExistedItem(bookId)) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<HashMap<Integer, Integer>>() {
-            }.getType();
-            String data = sharedPreferences.getString(KEY_DATA, null);
-            if (data != null) {
-                hashMap = gson.fromJson(data, type);
+
+    public boolean isExistedItem(BookInfo bookInfo) {
+        String data = sharedPreferences.getString(KEY_DATA,null);
+        if(data != null){
+            bookInfoList = gson.fromJson(data,type);
+            for (int i = 0; i < bookInfoList.size(); i++) {
+                if(bookInfoList.get(i).getId() == bookInfo.getId())
+                    return true;
             }
-            hashMap.put(bookId, quantity);
-            String newData = gson.toJson(hashMap);
+        }
+        return false;
+    }
+
+    public boolean addToCart(BookInfo bookInfo,int quantity) {
+        if (!isExistedItem(bookInfo)) {
+            String data = sharedPreferences.getString(KEY_DATA, null);
+            if (data != null)
+                bookInfoList = gson.fromJson(data, type);
+            bookInfo.setQuantity(quantity);
+            bookInfoList.add(bookInfo);
+            String newData = gson.toJson(bookInfoList);
             editor.putString(KEY_DATA, newData);
             editor.putInt(KEY_TOTAL_ITEM, sharedPreferences.getInt(KEY_TOTAL_ITEM, 0) + 1);
             editor.commit();
@@ -70,90 +79,18 @@ public class CartManager {
         return false;
     }
 
-    public void removeItem(int bookId) {
-        hashMap = new HashMap<>();
-
+    public void deleteFromCart(BookInfo bookInfo) {
         String data = sharedPreferences.getString(KEY_DATA, null);
-        if (data != null) {
-            hashMap = gson.fromJson(data, type);
-            hashMap.remove(bookId);
-            String newData = gson.toJson(hashMap);
-            editor.putString(KEY_DATA, newData);
-            if (getTotalItem() > 0)
-                editor.putInt(KEY_TOTAL_ITEM, sharedPreferences.getInt(KEY_TOTAL_ITEM, 0) - 1);
-            editor.commit();
-        }
-
-
-    }
-
-    public boolean isExistedItem(int bookId) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<Integer, Integer>>() {
-        }.getType();
-        String data = sharedPreferences.getString(KEY_DATA, null);
-        if (data != null) {
-            hashMap = gson.fromJson(data, type);
-        }
-        if (hashMap.containsKey(bookId))
-            return true;
-        return false;
-    }
-
-    public HashMap<Integer, Integer> getCartInfo() {
-        hashMap = new HashMap<>();
-        Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<Integer, Integer>>() {
-        }.getType();
-        String data = sharedPreferences.getString(KEY_DATA, null);
-        if (data != null) {
-            hashMap = gson.fromJson(data, type);
-        }
-        return hashMap;
-    }
-
-    public void updateQuantityItem(int bookId, int quantity) {
-        hashMap = new HashMap<>();
-        Gson gson = new Gson();
-        Type type = new TypeToken<HashMap<Integer, Integer>>() {
-        }.getType();
-        String data = sharedPreferences.getString(KEY_DATA, null);
-        if (data != null) {
-            hashMap = gson.fromJson(data, type);
-            hashMap.put(bookId, quantity);
-            String newData = gson.toJson(hashMap, type);
-            editor.putString(KEY_DATA, newData);
-            editor.commit();
-        }
-    }
-
-    public Cart getCart() {
-        Cart cart = new Cart();
-        cart.setListBook(getBookInfoList());
-        return cart;
-    }
-
-    private boolean addBookToCart(BookInfo bookInfo) {
-        if (!isExistedItem(bookInfo.getId())) {
-            String data = sharedPreferences.getString(KEY_DATA_CART, null);
-            if (data != null)
-                bookInfoList = gson.fromJson(data, type);
-            bookInfoList.add(bookInfo);
-            String newData = gson.toJson(bookInfoList);
-            editor.putString(KEY_DATA_CART, newData);
-            editor.commit();
-            return true;
-        }
-        return false;
-    }
-
-    private void deleteBookFromCart(BookInfo info) {
-        String data = sharedPreferences.getString(KEY_DATA_CART, null);
         if (data != null) {
             bookInfoList = gson.fromJson(data, type);
-            bookInfoList.remove(bookInfoList.indexOf(info));
+            for (int i = 0; i < bookInfoList.size(); i++) {
+                if(bookInfoList.get(i).getId() == bookInfo.getId()){
+                    bookInfoList.remove(bookInfoList.get(i));
+                    break;
+                }
+            }
             String newData = gson.toJson(bookInfoList, type);
-            editor.putString(KEY_DATA_CART, newData);
+            editor.putString(KEY_DATA, newData);
             if (getTotalItem() > 0) {
                 editor.putInt(KEY_TOTAL_ITEM, sharedPreferences.getInt(KEY_TOTAL_ITEM, 0) - 1);
             }
@@ -161,62 +98,34 @@ public class CartManager {
         }
     }
 
-    private void updateQuantityBook(int bookId, int quantity) {
-        String data = sharedPreferences.getString(KEY_DATA_CART, null);
+    public void updateQuantity(int bookId, int quantity) {
+        String data = sharedPreferences.getString(KEY_DATA, null);
         if (data != null) {
             bookInfoList = gson.fromJson(data, type);
             for (int i = 0; i < bookInfoList.size(); i++) {
                 if (bookId == bookInfoList.get(i).getId()) {
                     BookInfo bookInfo = bookInfoList.get(i);
-                    bookInfo.setQuantity(quantity);
-                    bookInfoList.remove(bookInfoList.get(i));
-                    bookInfoList.add(i, bookInfo);
+                    bookInfo.setQuantity((quantity));
+                    bookInfoList.set(i,bookInfo);
                     String newData = gson.toJson(bookInfoList);
-                    editor.putString(KEY_DATA_CART, newData);
+                    editor.putString(KEY_DATA, newData);
                     editor.commit();
                     break;
                 }
             }
         }
     }
-
-    public void loadListBookInCart() {
+    public List<BookInfo> getListBookInCart(){
         bookInfoList = new ArrayList<>();
-        hashMap = new HashMap<>();
         String data = sharedPreferences.getString(KEY_DATA, null);
-        if (data != null) {
-            hashMap = gson.fromJson(data, type);
+        if(data!= null){
+            bookInfoList = gson.fromJson(data,type);
         }
-        AsyncTask asyncTask = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                Iterator<Integer> iterator = hashMap.keySet().iterator();
-                while (iterator.hasNext()){
-                    try {
-                        BookInfo bookInfo = RetrofitManager.getInstance().getBookStoreService().getBookById(iterator.next())
-                                .execute().body();
-                        bookInfo.setQuantity(hashMap.get(iterator.next()));
-                        bookInfoList.add(bookInfo);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                setBookInfoList(bookInfoList);
-            }
-        };
-        asyncTask.execute();
-    }
-    public void setBookInfoList(List<BookInfo> bookInfoList){
-        this.bookInfoList = bookInfoList;
-    }
-
-    public List<BookInfo> getBookInfoList() {
         return bookInfoList;
+    }
+
+    public void clearCart(){
+        editor.clear();
+        editor.commit();
     }
 }

@@ -63,4 +63,10 @@ public interface BookStoreService {
 
     @GET("bookstore/getOrderByUserId")
     Call<List<Order>> getOrderByUserId(@Query("userId") int userId);
+
+    @GET("bookstore/getUserById")
+    Call<User> getUserById(@Query("userId") int userId);
+
+    @POST("bookstore/changeInfo")
+    Call<Boolean> changeInfo(@Body User user);
 }

@@ -101,14 +101,41 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_gravity="center_vertical"
                         android:id="@+id/tv_book_price_origin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@id/tv_book_name"
+                        android:layout_gravity="center_vertical"
                         android:background="@drawable/strike_price"
                         android:text="0 VNĐ"
                         android:textColor="#000000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/quantity_available"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/tv_available_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/red"
+                        android:textSize="18sp"/>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -119,6 +146,7 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/lb_quantity"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -213,7 +241,7 @@
                     android:background="?selectableItemBackground"
                     android:drawableLeft="@drawable/ic_add_shopping_cart_white_24dp"
                     android:paddingLeft="20dp"
-                    android:text="Add to cart"
+                    android:text="@string/add_to_cart"
                     android:textColor="@color/white" />
 
                 <ProgressBar
@@ -237,7 +265,7 @@
                     android:background="?selectableItemBackground"
                     android:drawableLeft="@drawable/ic_monetization_on_white_24dp"
                     android:paddingLeft="30dp"
-                    android:text="Buy now"
+                    android:text="@string/buy_now"
                     android:textColor="@color/white" />
 
                 <ProgressBar

@@ -12,7 +12,13 @@ import android.widget.TextView;
 
 import com.paypal.android.sdk.payments.ShippingAddress;
 import com.teamand.bookstore.R;
+import com.teamand.bookstore.manager.RetrofitManager;
 import com.teamand.bookstore.manager.SessionManager;
+import com.teamand.bookstore.model.User;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileUserActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton imbClose;
@@ -42,6 +48,20 @@ public class ProfileUserActivity extends AppCompatActivity implements View.OnCli
         sessionManager = new SessionManager(getApplicationContext());
         tvUsername.setText(sessionManager.getCurrentUser().getName());
         tvEmail.setText(sessionManager.getCurrentUser().getEmail());
+        RetrofitManager.getInstance().getBookStoreService().getUserById(sessionManager.getCurrentUser().getId())
+                .enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if(response.isSuccessful()){
+                            tvUsername.setText(response.body().getName());
+                            tvEmail.setText(response.body().getEmail());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                    }
+                });
     }
 
     @Override

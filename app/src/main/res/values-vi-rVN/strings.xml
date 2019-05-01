@@ -48,4 +48,9 @@
     <string name="orders">Đơn hàng</string>
     <string name="account_detail">Cài đặt tài khoản</string>
     <string name="log_out">Đăng xuất</string>
+    <string name="time">Thời gian:</string>
+    <string name="status">Trạng thái</string>
+    <string name="add_to_cart">Thêm vào giỏ</string>
+    <string name="buy_now">Mua ngay</string>
+    <string name="quantity_available">Có sẵn:</string>
 </resources>

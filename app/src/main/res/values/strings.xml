@@ -50,4 +50,7 @@
     <string name="time">Time:</string>
     <string name="payment">Payment:</string>
     <string name="status">Status:</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="buy_now">Buy now</string>
+    <string name="quantity_available">Quantity Available:</string>
 </resources>

@@ -31,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BookDetailActivity extends AppCompatActivity implements View.OnClickListener {
-    private TextView tvBookName, tvBookPrice,
+    private TextView tvBookName, tvBookPrice, tvAvailabeQuantity,
             tvDiscount, tvDescription, tvQuantity, tvToExpand, tvExpand, tvTotalItem, tvOriginPrice;
     private boolean isExpended;
     private Button btnAddQuantity, btnSubQuantity, btnAddToCart, btnBuyNow;
@@ -64,6 +64,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         tvExpand = findViewById(R.id.tv_expand);
         tvToExpand = findViewById(R.id.tv_to_expand);
         isExpended = false;
+        tvAvailabeQuantity = findViewById(R.id.tv_available_quantity);
         tvToExpand.setOnClickListener(this);
         imbFavorite = findViewById(R.id.imb_favorite);
         btnAddToCart = findViewById(R.id.btn_add_to_cart);
@@ -93,6 +94,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             public void onResponse(Call<BookInfo> call, Response<BookInfo> response) {
                 if (response.isSuccessful()) {
                     bookInfo = response.body();
+                    tvAvailabeQuantity.setText(bookInfo.getAvailableQuantity()+"");
                     if (bookInfo.getDiscount() > 0) {
                         tvDiscount.setVisibility(View.VISIBLE);
                         tvDiscount.setText(bookInfo.getDiscount() + " %");
@@ -120,6 +122,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
                     }
 
                 }
+
             }
 
             @Override
@@ -166,33 +169,41 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void buyNow() {
-        btnBuyNow.setVisibility(View.GONE);
-        findViewById(R.id.pgb_buy_now).setVisibility(View.VISIBLE);
-        findViewById(R.id.btn_buy_now).setVisibility(View.GONE);
-        boolean resultAdd = cartManager.addToCart(bookInfo.getId(),Integer.valueOf(tvQuantity.getText().toString()));
-        btnBuyNow.setVisibility(View.VISIBLE);
-        findViewById(R.id.pgb_buy_now).setVisibility(View.GONE);
-        if(resultAdd == true){
-            startActivity(new Intent(this, CartActivity.class));
-        }else {
-            Helper.showToast(getApplicationContext(),"Đã tồn tại sách trong giỏ hàng");
-        }
-        tvTotalItem.setText(cartManager.getTotalItem()+"");
-
+        if(Integer.valueOf(tvQuantity.getText().toString()) <=
+                Integer.valueOf(tvAvailabeQuantity.getText().toString())) {
+            btnBuyNow.setVisibility(View.GONE);
+            findViewById(R.id.pgb_buy_now).setVisibility(View.VISIBLE);
+            findViewById(R.id.btn_buy_now).setVisibility(View.GONE);
+            boolean resultAdd = cartManager.addToCart(bookInfo, Integer.valueOf(tvQuantity.getText().toString()));
+            btnBuyNow.setVisibility(View.VISIBLE);
+            findViewById(R.id.pgb_buy_now).setVisibility(View.GONE);
+            if (resultAdd == true) {
+                startActivity(new Intent(this, CartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            } else {
+                Helper.showToast(getApplicationContext(), "Đã tồn tại sách trong giỏ hàng");
+            }
+            tvTotalItem.setText(cartManager.getTotalItem() + "");
+        }else
+            Helper.showToast(getApplicationContext(),"Không đủ sách trong kho!");
     }
 
+
     private void addToCart(){
-        btnAddToCart.setVisibility(View.GONE);
-        findViewById(R.id.pgb_add_to_cart).setVisibility(View.VISIBLE);
-        boolean resultAdd = cartManager.addToCart(bookInfo.getId(),Integer.valueOf(tvQuantity.getText().toString()));
-        findViewById(R.id.pgb_add_to_cart).setVisibility(View.GONE);
-        btnAddToCart.setVisibility(View.VISIBLE);
-        if(resultAdd == true){
-            Helper.showToast(getApplicationContext(),"Đã thêm vào giỏ hàng");
-        }else {
-            Helper.showToast(getApplicationContext(),"Đã tồn tại sách trong giỏ hàng");
-        }
-        tvTotalItem.setText(cartManager.getTotalItem()+"");
+        if(Integer.valueOf(tvQuantity.getText().toString()) <=
+                Integer.valueOf(tvAvailabeQuantity.getText().toString())) {
+            btnAddToCart.setVisibility(View.GONE);
+            findViewById(R.id.pgb_add_to_cart).setVisibility(View.VISIBLE);
+            boolean resultAdd = cartManager.addToCart(bookInfo,Integer.valueOf(tvQuantity.getText().toString()));
+            findViewById(R.id.pgb_add_to_cart).setVisibility(View.GONE);
+            btnAddToCart.setVisibility(View.VISIBLE);
+            if(resultAdd == true){
+                Helper.showToast(getApplicationContext(),"Đã thêm vào giỏ hàng");
+            }else {
+                Helper.showToast(getApplicationContext(),"Đã tồn tại sách trong giỏ hàng");
+            }
+            tvTotalItem.setText(cartManager.getTotalItem()+"");
+        }else
+            Helper.showToast(getApplicationContext(),"Không đủ sách trong kho!");
     }
     private void handleButtonFavorite() {
             WishListManager manager = new WishListManager(this);

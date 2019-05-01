@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity
                 new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
         rv_book_discount.setLayoutManager(
                 new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        loadBook();
         loadCategory();
         loadPublisher();
         writeWishListToSharePreference();
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity
                                 wishListManager.addToWishList(bookInfo.getId());
                             }
                         }
+                        loadBook();
                     }
                 }
 
@@ -128,6 +128,8 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
+        }else {
+            loadBook();
         }
     }
     private void loadBook(){

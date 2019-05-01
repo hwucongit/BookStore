@@ -1,16 +1,15 @@
 package com.teamand.bookstore.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -22,19 +21,24 @@ import com.paypal.android.sdk.payments.ShippingAddress;
 import com.teamand.bookstore.R;
 import com.teamand.bookstore.helper.Constants;
 import com.teamand.bookstore.helper.Helper;
+import com.teamand.bookstore.manager.CartManager;
 import com.teamand.bookstore.manager.RetrofitManager;
 import com.teamand.bookstore.manager.SessionManager;
+import com.teamand.bookstore.model.Book;
+import com.teamand.bookstore.model.BookInfo;
 import com.teamand.bookstore.model.Cart;
 import com.teamand.bookstore.model.Client;
 import com.teamand.bookstore.model.Order;
 import com.teamand.bookstore.model.ResponseCurrency;
 import com.teamand.bookstore.model.ShippingInfo;
+import com.teamand.bookstore.model.User;
 
 import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,6 +51,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private Button btnConfirm;
     private EditText edtFullName, edtPhoneNumber, edtNumber, edtDistrict, edtCity, edtZipcode;
     private SessionManager sessionManager;
+    private User currentUser;
     public static final int REQUEST_CODE_PAYPAL = 1111;
     private double totalPrice;
     private static PayPalConfiguration config = new PayPalConfiguration()
@@ -74,15 +79,38 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         radioGroup = findViewById(R.id.rg_payment_method);
         btnConfirm = findViewById(R.id.btn_checkout);
         btnConfirm.setOnClickListener(this);
+        loadShippingAddress();
 
         // start paypal service
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
     }
-    private void openPaypalPaymentActivity(){
-        final Double amount = Double.parseDouble(getIntent()
-                .getStringExtra("totalPrice"));
+    private void loadShippingAddress() {
+        if(sessionManager.isLoggedIn()){
+            RetrofitManager.getInstance().getBookStoreService().getUserById(sessionManager.getCurrentUser().getId())
+                    .enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if(response.isSuccessful()){
+                                User user = response.body();
+                                currentUser = user;
+                                edtFullName.setText(user.getName());
+                                edtNumber.setText(user.getAddress().getNumber());
+                                edtDistrict.setText(user.getAddress().getDistrict());
+                                edtCity.setText(user.getAddress().getCity());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+
+                        }
+                    });
+        }
+    }
+    private void openPayPalPaymentActivity(){
+        final Double amount = Double.parseDouble(getIntent().getStringExtra("totalPrice"));
         RetrofitManager.getInstance().getConvertMoneyService()
                 .convertVNDtoUSD(Constants.ACCESS_KEY_API_CURRENCY,"VND", "USD", 1)
                 .enqueue(new Callback<ResponseCurrency>() {
@@ -139,29 +167,27 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         Order order = new Order();
         String cartData = getIntent().getStringExtra("cart");
         Cart cart = new Gson().fromJson(cartData, Cart.class);
-
         //set cart
         order.setCart(cart);
-
         //set status
         order.setStatus("In Progress");
-
         //set method payment
         order.setPaymentMethod(paymentMethod);
-
         //set client
         Client client = new Client();
         if(sessionManager.isLoggedIn())
             client.setId(sessionManager.getCurrentUser().getId());
+        else
+            client.setId(Constants.ID_GUEST_CLIENT);
         order.setClient(client);
-
         //set ship address
         ShippingInfo shippingInfo = new ShippingInfo();
-        shippingInfo.setReceiverName("Test");
-        shippingInfo.setNumber("11");
-        shippingInfo.setDistrict("hn");
-        shippingInfo.setCity("DL");
-        shippingInfo.setZipcode("123");
+        shippingInfo.setReceiverName(edtFullName.getText().toString());
+        shippingInfo.setNumber(edtNumber.getText().toString());
+        shippingInfo.setDistrict(edtDistrict.getText().toString());
+        shippingInfo.setCity(edtCity.getText().toString());
+        shippingInfo.setZipcode(edtZipcode.getText().toString());
+        shippingInfo.setPhonenumber(edtPhoneNumber.getText().toString());
         order.setShippingInfo(shippingInfo);
         order.setDateCreate(new Date(new java.util.Date().getTime()));
         RetrofitManager.getInstance().getBookStoreService().addOrder(order)
@@ -169,6 +195,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if(response.isSuccessful()){
+                            CartManager.getInstance(getApplicationContext()).clearCart();
+                            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                             Helper.showToast(getApplicationContext(),"OK");
                         }else
                             Helper.showToast(getApplicationContext(),"Fail");
@@ -176,7 +206,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
                     @Override
                     public void onFailure(Call<Boolean> call, Throwable t) {
-
                     }
                 });
     }
@@ -192,7 +221,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             Helper.showToast(getApplicationContext(),"Điền đầy đủ thông tin yêu cầu");
         }else {
             if (radioGroup.getCheckedRadioButtonId() == R.id.rb_paypal) {
-                openPaypalPaymentActivity();
+                openPayPalPaymentActivity();
             }else if(radioGroup.getCheckedRadioButtonId() == R.id.rb_shipcode){
                 addOrder("shipcode");
             }

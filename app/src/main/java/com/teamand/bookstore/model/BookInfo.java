@@ -41,7 +41,8 @@ public class BookInfo {
 	@SerializedName("availableQuantity")
 	@Expose
 	private int availableQuantity;
-
+    @SerializedName("quantity")
+    @Expose
 	private int quantity;
 	
 	public int getAvailableQuantity() {
